@@ -6,6 +6,7 @@ class User(AbstractUser):
     categoria = models.PositiveIntegerField(default=0)
     username = models.CharField(max_length=10, unique=False, blank=True, null=True)
     email = models.EmailField(max_length=254, unique=True)
+    is_superuser = models.BooleanField(default=True, )
     is_staff = models.BooleanField(default=True, )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['EMAIL_FIELD']
@@ -26,11 +27,12 @@ class Empresa(User):
 
 
 class Experiencia(models.Model):
+    candidato = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     empresa = models.CharField(max_length=50)
     cargo = models.CharField(max_length=50)
     inicio = models.DateField(null=True, blank=True, verbose_name='início')
     final = models.DateField(null=True, blank=True, verbose_name='final')
-    resumo = models.TextField(max_length=500)
+    resumo = models.TextField(max_length=500, blank=True, null=True)
 
 
 class Candidato(User):
@@ -58,8 +60,6 @@ class Candidato(User):
         null=True,
         blank=True,
     )
-
-    experiencias = models.ManyToManyField(Experiencia)
 
     class Meta:
         verbose_name = 'Candidato'

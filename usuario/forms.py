@@ -1,39 +1,32 @@
-from .models import Candidato, Empresa
+from .models import Candidato, Empresa, Experiencia
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+
 
 class EmpresaForm(UserCreationForm):
     class Meta:
         model = Empresa
-        fields = ['first_name', 'email',]
+        fields = ['first_name', 'email', ]
+
 
 class CandidatoForm(UserCreationForm):
     class Meta:
         model = Candidato
-        fields = ['first_name', 'email',]
+        fields = ['first_name', 'email', ]
 
-class UserFormUp(forms.ModelForm):
+
+class CandidatoEditForm(forms.ModelForm):
     class Meta:
         model = Candidato
-        fields = ['first_name', 'last_name', 'username', 'email', 'password']
+        fields = ['first_name', 'last_name', 'email', 'pretensao_salarial', 'ultima_escolaridade']
 
 
-class ExperienciaForm(forms.Form):
-    """
-    Form para experiencias do candidato
-    """
+class ExperienciaForm(forms.ModelForm):
+    class Meta:
+        model = Experiencia
+        fields = ['candidato', 'empresa', 'cargo']
 
 
+#ExperienciaFormSet = forms.inlineformset_factory(Candidato, Experiencia, form=ExperienciaForm, extra=1)
 
 
-    anchor = forms.CharField(
-                    max_length=100,
-                    widget=forms.TextInput(attrs={
-                        'placeholder': 'Link Name / Anchor Text',
-                    }),
-                    required=False)
-    url = forms.URLField(
-                    widget=forms.URLInput(attrs={
-                        'placeholder': 'URL',
-                    }),
-                    required=False)

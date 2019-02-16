@@ -57,12 +57,6 @@ def aplicar_vaga(request, id_vaga):
     return redirect('listar_vagas')
 
 
-
-
-@login_required
-def listar_aplicacoes(request):
-    pass
-
 @login_required
 def deletar_vaga(request, id_vaga):
     Vaga.objects.filter(pk=id_vaga).update(delete=True)
@@ -79,14 +73,6 @@ def alterar_vaga(request, id_vaga):
         return redirect('listar_vagas')
     else:
         return render(request, 'editar_vaga.html', {'form': form})
-
-
-def cancelar_aplicacao(request):
-    pass
-
-
-def ver_vaga(request, id_vaga):
-    pass
 
 
 def minhas_vagas(request):
