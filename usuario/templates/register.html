@@ -32,7 +32,7 @@
       <div class="card-body p-0">
         <!-- Nested Row within Card Body -->
         <div class="row">
-          <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+          <div class="col-lg-5 d-none d-lg-block"></div>
           <div class="col-lg-7">
             <div class="p-5">
               <div class="text-center">
@@ -45,26 +45,30 @@
                 {% csrf_token %}
 
                  <div class="form-group">
-                  <input type="text" name="first_name" maxlength="50" autofocus="" required="" id="id_first_name" class="form-control form-control-user" aria-required="true">
+                  <input type="text" name="first_name" maxlength="50" autofocus="" required="" id="id_first_name"
+                         class="form-control form-control-user" aria-required="true" placeholder="Nome">
                  {{ form.first_name.errors }}
                 </div>
 
 
                 <div class="form-group">
-                  <input type="email" name="email" maxlength="254" autofocus="" required="required" id="id_email" class="form-control form-control-user">
+                  <input type="email" name="email" maxlength="254" autofocus="" required="required" id="id_email"
+                         class="form-control form-control-user" placeholder="E-mail">
                  {{ form.email.errors }}
                 </div>
 
 
                 <div class="form-group row">
                   <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" name="password1" required="" id="id_password1" class="form-control form-control-user" aria-required="true">
+                    <input type="password" name="password1" required="" id="id_password1"
+                           class="form-control form-control-user" aria-required="true" placeholder="Senha">
                     {{ form.password1.errors }}
                   </div>
 
 
                   <div class="col-sm-6">
-                    <input type="password" name="password2" required="" id="id_password2" class="form-control form-control-user" aria-required="true">
+                    <input type="password" name="password2" required="" id="id_password2"
+                           class="form-control form-control-user" aria-required="true" placeholder="Confirme a senha">
                     {{ form.password2.errors }}
                   </div>
                 </div>

@@ -1,10 +1,10 @@
 from django.db import models
-from usuario.models import User
+from usuario.models import Candidato, Empresa
 
 
 class Aplicacao(models.Model):
     data = models.DateField(auto_now=True, editable=False)
-    candidato = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='candidato')
+    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, verbose_name='candidato')
 
 
 class Vaga(models.Model):
@@ -34,7 +34,7 @@ class Vaga(models.Model):
         (DR, 'Doutorado'),
     )
 
-    empresa = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='empresa')
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, verbose_name='empresa')
 
     nome = models.CharField(max_length=50, default='')
 
@@ -57,6 +57,7 @@ class Vaga(models.Model):
 
     def get_quantidade_aplicacoes(self):
         return self.aplicacoes.count()
+
 
     def __str__(self):
         return self.nome

@@ -26,15 +26,6 @@ class Empresa(User):
         verbose_name_plural = 'Empresas'
 
 
-class Experiencia(models.Model):
-    candidato = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
-    empresa = models.CharField(max_length=50)
-    cargo = models.CharField(max_length=50)
-    inicio = models.DateField(null=True, blank=True, verbose_name='início')
-    final = models.DateField(null=True, blank=True, verbose_name='final')
-    resumo = models.TextField(max_length=500, blank=True, null=True)
-
-
 class Candidato(User):
 
     EF = 'Ensino Fundamental'
@@ -65,3 +56,11 @@ class Candidato(User):
         verbose_name = 'Candidato'
         verbose_name_plural = 'Candidatos'
 
+
+class Experiencia(models.Model):
+    candidato = models.ForeignKey(Candidato, blank=True, null=True, on_delete=models.CASCADE)
+    empresa = models.CharField(max_length=50)
+    cargo = models.CharField(max_length=50)
+    inicio = models.DateField(null=True, blank=True, verbose_name='início')
+    final = models.DateField(null=True, blank=True, verbose_name='final')
+    resumo = models.TextField(max_length=500, blank=True, null=True)

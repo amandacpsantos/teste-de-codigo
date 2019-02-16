@@ -24,7 +24,7 @@ class CandidatoEditForm(forms.ModelForm):
 class ExperienciaForm(forms.ModelForm):
     class Meta:
         model = Experiencia
-        fields = ['candidato', 'empresa', 'cargo']
+        fields = ['candidato', 'empresa', 'cargo', 'inicio', 'final', 'resumo']
 
 
 #ExperienciaFormSet = forms.inlineformset_factory(Candidato, Experiencia, form=ExperienciaForm, extra=1)
