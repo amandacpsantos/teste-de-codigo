@@ -1,45 +1,68 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from .enums import FaixaSalarial, Escolaridade
+from usuario.models import User
 
 
-class User(AbstractUser):
-    email = models.EmailField(max_length=254, unique=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['USERNAME_FIELD']
+class Aplicacao(models.Model):
+    data = models.DateField(auto_now=True, editable=False)
+    candidato = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='candidato')
 
 
 class Vaga(models.Model):
-    nome = models.CharField(max_length=50),
+    A1 = 'Até 1.000'
+    D1A2 = 'De 1.000 a 2.000'
+    D2A3 = 'De 2.000 a 3.000'
+    AC3 = 'Acima de 3.000'
+    FAIXA_SALARIAL = (
+        (A1, 'Até 1.000'),
+        (D1A2, 'De 1.000 a 2.000'),
+        (D2A3, 'De 2.000 a 3.000'),
+        (AC3, 'Acima de 3.000'),
+    )
+
+    EF = 'Ensino Fundamental'
+    EM = 'Ensino Médio'
+    TG = 'Tecnólogo'
+    ES = 'Ensino Superior'
+    PS = 'Pós / MBA / Mestrado'
+    DR = 'Doutorado'
+    ESCOLARIDADE = (
+        (EF, 'Ensino Fundamental'),
+        (EM, 'Ensino Médio'),
+        (TG, 'Tecnólogo'),
+        (ES, 'Ensino Superior'),
+        (PS, 'Pós / MBA / Mestrado'),
+        (DR, 'Doutorado'),
+    )
+
+    empresa = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='empresa')
+
+    nome = models.CharField(max_length=50, default='')
+
     faixa_salarial = models.CharField(
-        max_length=5,
-        choices=[(tag, tag.value) for tag in FaixaSalarial]),
-    requisitos = models.TextField(max_length=500),
+        max_length=50,
+        choices=FAIXA_SALARIAL,
+        default=A1,
+    )
+
     escolaridade = models.CharField(
-        max_length=5,
-        choices=[(tag, tag.value) for tag in Escolaridade]),
+        max_length=50,
+        choices=ESCOLARIDADE,
+        default=EF,
+    )
+
+    requisitos = models.TextField(max_length=500, default='')
+    delete = models.BooleanField(default=False, editable=False)
+    aplicacoes = models.ManyToManyField(Aplicacao, editable=False, blank=True
+                                        )
+
+    def get_quantidade_aplicacoes(self):
+        return self.aplicacoes.count()
 
     def __str__(self):
         return self.nome
 
     class Meta:
         verbose_name_plural = 'Vagas'
-
-
-class Candidato(User):
-    pretensao_salarial = models.DecimalField(max_digits=10, decimal_places=2)
-    ultima_escolaridade = models.CharField(
-        max_length=5,
-        choices=[(tag, tag.value) for tag in Escolaridade]),
-
-
-class Experiencia(models.Model):
-    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, verbose_name='candidato')
-    empresa = models.CharField(max_length=50)
-    cargo = models.CharField(max_length=50)
-    inicio = models.DateField(null=True, blank=True, verbose_name='início')
-    final = models.DateField(null=True, blank=True, verbose_name='final')
-    resumo = models.TextField(max_length=500)
 
 
 

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+    <br>
+    <br>
+
+    <div class="panel-default">
+
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <input class="form-control" id="searchfield" type="text" placeholder="Search..">
+
+            <br>
+            <br>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Faixa Salarial</th>
+                        <th>Escolaridade Mínima</th>
+                        <th>Candidatos</th>
+                        <th>Ver</th>
+                    </tr>
+                    </thead>
+
+
+
+                    <tbody id="lista_vaga">
+                    {% for vaga in vagas %}
+
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ vaga.nome }}</td>
+                        <td>{{ vaga.faixa_salarial }}</td>
+                        <td>{{ vaga.escolaridade }}</td>
+                        <td>{{ vaga.get_quantidade_aplicacoes }}</td>
+
+                        <td>
+                            <button class="btn btn-outline-primary" id="btnVaga{{vaga.id}}" data-toggle="modal"
+                                    data-target="#modalVaga{{ vaga.id }}">Detalhes</button>
+                        </td>
+
+
+                        <!-- Modal Vaga -->
+                        <div class="modal fade" id="modalVaga{{ vaga.id }}" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel"><b>{{vaga.nome}}</b></h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+
+                              <div class="modal-body">
+                                  Faixa Salarial: {{ vaga.faixa_salarial }}<br><hr>
+                                  Escolaridade Mínima: {{ vaga.escolaridade }}<br><hr>
+                                  Requisitos: {{ vaga.requisitos }}
+                              </div>
+
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fechar</button>
+
+                                  {% if user.get_categoria == 0 %}
+                                      <a href="{% url 'aplicar_vaga' vaga.id %}">
+                                          <button type="submit" class="btn btn-outline-primary">Candidatar</button>
+                                      </a>
+                                  {% endif %}
+
+
+                              </div>
+
+                            </div>
+                          </div>
+
+                        </div>
+
+
+
+                        <script>
+                            var a = "{{ vaga.id }}"
+                            $(document).ready(function(){
+                                $("#btnVaga"+a).click(function(){
+                                    $("#modalVaga"+a).modal({show:true});
+                                });
+                            });
+                        </script>
+
+
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.table-responsive -->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#searchfield").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#lista_vaga tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                 });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+{% endblock %}
