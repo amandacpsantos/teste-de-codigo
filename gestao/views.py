@@ -1,3 +1,6 @@
+import datetime
+
+import json
 from django.db import IntegrityError
 from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -10,8 +13,43 @@ from usuario.models import Experiencia
 from django.contrib import messages
 
 
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+
 def dashboard(request):
-    return render(request, "dashboard.html")
+
+    grupo_datas = Vaga.objects.annotate(month=TruncMonth('data')).values('month').annotate(total=Count('nome')).order_by('month')
+    grupo_candidatos = Aplicacao.objects.annotate(month=TruncMonth('data')).values('month').annotate(total=Count('candidato')).order_by('month')
+
+    datas_vagas = []
+    total_vagas = []
+
+    datas_candidatos =[]
+    total_candidatos = []
+
+    for data in grupo_datas:
+        datas_vagas.append('{}/{}'.format(data['month'].month, data['month'].year))
+        total_vagas.append(data['total'])
+
+    for candidato in grupo_candidatos:
+        datas_candidatos.append('{}/{}'.format(candidato['month'].month, candidato['month'].year))
+        total_candidatos.append(candidato['total'])
+
+    if len(datas_vagas) > 12:
+        datas_vagas = datas_vagas[-12]
+        total_vagas = total_vagas[-12]
+
+    if len(datas_candidatos) > 12:
+        datas_candidatos = datas_candidatos[-12]
+        total_candidatos = total_candidatos[-12]
+
+    context = {
+        'datas_vagas': json.dumps(datas_vagas),
+        'total_vagas': json.dumps(total_vagas),
+        'datas_candidatos': json.dumps(datas_candidatos),
+        'total_candidatos': json.dumps(total_candidatos),
+    }
+    return render(request, 'dashboard.html', context)
 
 
 @login_required

@@ -52,11 +52,12 @@ class Vaga(models.Model):
 
     requisitos = models.TextField(max_length=500, default='')
     delete = models.BooleanField(default=False, editable=False)
-    aplicacoes = models.ManyToManyField(Aplicacao, editable=False, blank=True
-                                        )
+    aplicacoes = models.ManyToManyField(Aplicacao, editable=False, blank=True)
+    data = models.DateField()
 
     def get_quantidade_aplicacoes(self):
         return self.aplicacoes.count()
+
 
 
     def __str__(self):

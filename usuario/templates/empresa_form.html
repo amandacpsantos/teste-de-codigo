@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Alterar">
+    <a href="{% url 'dashboard' %}">Voltar</a>
+
+</form>
+
+{% endblock %}

@@ -21,6 +21,13 @@ class CandidatoEditForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'pretensao_salarial', 'ultima_escolaridade']
 
 
+class EmpresaEditForm(forms.ModelForm):
+    class Meta:
+        model = Candidato
+        fields = ['first_name', 'email', ]
+
+
+
 class ExperienciaForm(forms.ModelForm):
     class Meta:
         model = Experiencia

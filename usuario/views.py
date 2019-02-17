@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.forms import modelformset_factory, inlineformset_factory
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Candidato, Experiencia
-from .forms import CandidatoEditForm, ExperienciaForm
+from .models import Candidato, Empresa, Experiencia
+from .forms import CandidatoEditForm, ExperienciaForm, EmpresaEditForm
 
 
 from .models import User, Experiencia
@@ -57,3 +57,16 @@ def editar_candidato(request):
         candidato = CandidatoEditForm(instance=candidato)
 
     return render(request, "candidato_form.html", {"exp": experiencias, "cad": candidato})
+
+
+@login_required
+def editar_empresa(request):
+    empresa = get_object_or_404(Empresa, user_ptr_id=request.user.id)
+    form = EmpresaEditForm(request.POST or None, instance=empresa)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Alteração com sucesso!')
+        return redirect('editar_empresa')
+    else:
+        return render(request, 'empresa_form.html', {'form': form})

@@ -41,13 +41,15 @@
                         <td>{{ vaga.get_quantidade_aplicacoes }}</td>
 
                         <td>
-                            <button class="btn btn-outline-primary" id="btnVaga{{vaga.id}}" data-toggle="modal"
-                                    data-target="#modalVaga{{ vaga.id }}">Detalhes</button>
+                            <a href="{% url 'detalhes_vaga' vaga.id %}">
+                                <button class="btn btn-outline-primary">Detalhes</button>
+                            </a>
+
                         </td>
 
                         <td>
-                            <a href="{% url 'detalhes_vaga' vaga.id %}">
-                                <button class="btn btn-outline-primary">D</button>
+                            <a href="{% url 'alterar_vaga' vaga.id %}">
+                                <button class="btn btn-outline-primary">Editar</button>
                             </a>
 
                         </td>

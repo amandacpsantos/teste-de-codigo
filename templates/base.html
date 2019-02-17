@@ -72,11 +72,13 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
 
-            <a class="collapse-item" href="{% url 'minhas_vagas' %}">Lista</a>
-
-            {% if user.get_categoria != 0 %}
+             {% if user.get_categoria != 0 %}
              <a class="collapse-item" href="{% url 'cadastrar_vaga' %}">Cadastrar</a>
             {% endif %}
+
+            <a class="collapse-item" href="{% url 'minhas_vagas' %}">Todas</a>
+
+
 
           </div>
         </div>
@@ -133,10 +135,20 @@
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
 
+
+                {% if user.get_categoria == 1 %}
+                <a class="dropdown-item" href="{% url 'editar_empresa' %}">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Perfil
+                </a>
+
+                {% else %}
                 <a class="dropdown-item" href="{% url 'editar_candidato' %}">
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Perfil
                 </a>
+
+                {% endif %}
 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">

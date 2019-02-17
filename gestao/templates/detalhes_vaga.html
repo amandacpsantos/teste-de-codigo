@@ -4,7 +4,7 @@
 {% load static %}
 
 
-
+<!-- Informações da vaga -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">{{ vaga.nome }}</h6>
@@ -12,14 +12,15 @@
     <div class="card-body">
         Faixa Salarial: {{ vaga.faixa_salarial }}<br><hr>
         Requisitos: {{ vaga.requisitos }}<br><hr>
-        Escolaridade Mínima: {{ vaga.escolaridade }}<br><hr>
+        Escolaridade Mínima: {{ vaga.escolaridade }}<br>
     </div>
 </div>
 
+
+<!-- Informações do candidato -->
 {% for candidato in detalhes %}
 <div class="card shadow mb-4">
 
-    <!-- Cabeçalho -->
     <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
         <h6 class="m-0 font-weight-bold text-primary">Candidato #{{ forloop.counter }} | {{candidato.0.candidato.first_name}}</h6>
     </a>
