@@ -10,6 +10,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
 
+@login_required
 def dashboard(request):
     grupo_datas = Vaga.objects.annotate(month=TruncMonth('data')).values('month').annotate(
         total=Count('nome')).order_by('month')
@@ -63,9 +64,9 @@ def cadastrar_vaga(request):
 @login_required()
 def listar_vagas(request):
     """
-    Listar todas as vagas cadastradas e disponíveis para visualização
-    :param request:
-    :return: request.Response
+    Listar todas as vagas cadastradas e disponíveis para visualização.
+    :param request: Request.
+    :return: Dicionário com dados de todas as vagas.
     """
     vagas = Vaga.objects.all().filter(delete=False)
     return render(request, "listar_vagas.html", {'vagas': vagas})
@@ -73,12 +74,11 @@ def listar_vagas(request):
 
 @login_required
 def aplicar_vaga(request, id_vaga):
-
     """
-    Registrar a candidatura do usuário à vaga
-    :param request: request
-    :param id_vaga: int
-    :return: HttpResponse
+    Busca os dados da vaga e altera o atributo 'delete' para True.
+    :param request: Request.
+    :param id_vaga: número de identificador da vaga.
+    :return: Redirecionamento para tela de vagas.
     """
 
     # verifica se já existe entre os elementos da vaga
@@ -97,12 +97,24 @@ def aplicar_vaga(request, id_vaga):
 
 @login_required
 def deletar_vaga(request, id_vaga):
+    """
+    Busca os dados da vaga e altera o atributo 'delete' para True.
+    :param request: Request.
+    :param id_vaga: número de identificador da vaga.
+    :return: Redirecionamento para tela de vagas.
+    """
     Vaga.objects.filter(pk=id_vaga).update(delete=True)
     return redirect('minhas_vagas')
 
 
 @login_required
 def alterar_vaga(request, id_vaga):
+    """
+    Busca os dados da vaga e persiste as alterações.
+    :param request: Request.
+    :param id_vaga: número de identificador da vaga.
+    :return: Redirecionamento para tela de vagas ou dicionário contendo dados e campos do formulário
+    """
     vaga = get_object_or_404(Vaga, pk=id_vaga)
     form = VagaForm(request.POST or None, instance=vaga)
 
@@ -113,6 +125,7 @@ def alterar_vaga(request, id_vaga):
         return render(request, 'editar_vaga.html', {'form': form})
 
 
+@login_required
 def minhas_vagas(request):
     # (1, Empresa)
     # (0, Candidato)
@@ -126,33 +139,36 @@ def minhas_vagas(request):
 
 @login_required
 def detalhes_vaga(request, id_vaga):
-    faixa = ['Até 1.000', 'De 1.000 a 2.000', 'De 2.000 a 3.000', 'Acima de 3.000']
+    faixa = {'Até 1.000': 1000,
+             'De 1.000 a 2.000': 2000,
+             'De 2.000 a 3.000': 3000,
+             'Acima de 3.000': 3001, }
+
     escolaridade = ['Ensino Fundamental', 'Ensino Médio', 'Tecnólogo', 'Ensino Superior', 'Pós / MBA / Mestrado',
                     'Doutorado']
 
-    # buscar a vaga
+    # busca os dados da vaga
     vaga = Vaga.objects.get(id=id_vaga)
 
-    # buscar todas as aplicações da vaga
+    # busca todas as aplicações da vaga
     aplicacoes_vaga = vaga.aplicacoes.all()
 
     detalhes = []
 
-    # buscar as experiências de cada candidato e calcular a pontuação
+    # busca as experiências de cada candidato e calcula a pontuação de acordo com escolaridade e pretensão salarial
     for aplicacao in aplicacoes_vaga:
         pontos = 0
-
-        if aplicacao.candidato.pretensao_salarial is not None and \
-                (faixa.index(aplicacao.candidato.pretensao_salarial) <= faixa.index(vaga.faixa_salarial)):
-            pontos += 1
 
         if aplicacao.candidato.ultima_escolaridade is not None and \
                 (escolaridade.index(aplicacao.candidato.ultima_escolaridade) >= escolaridade.index(vaga.escolaridade)):
             pontos += 1
 
+        if vaga.faixa_salarial in faixa:
+            if aplicacao.candidato.pretensao_salarial - faixa[vaga.faixa_salarial] <= 0:
+                pontos += 1
+
         exp = Experiencia.objects.filter(candidato=aplicacao.candidato)
         detalhes.append([aplicacao.candidato, exp, pontos])
 
     contexto = {'detalhes': detalhes, 'vaga': vaga}
-    print(contexto)
     return render(request, "detalhes_vaga.html", contexto)
