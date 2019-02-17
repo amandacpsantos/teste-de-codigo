@@ -4,11 +4,8 @@ from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Candidato, Empresa, Experiencia
 from .forms import CandidatoEditForm, ExperienciaForm, EmpresaEditForm
-
-
-from .models import User, Experiencia
+from .models import Experiencia
 from .forms import CandidatoForm, EmpresaForm, CandidatoEditForm
-from django.contrib.auth.models import User
 
 from django.views.decorators.csrf import csrf_protect
 
@@ -41,7 +38,7 @@ def registrar_empresa(request):
 @csrf_protect
 def editar_candidato(request):
     candidato = get_object_or_404(Candidato, user_ptr_id=request.user.id)
-    ExperienciaFormset = inlineformset_factory(Candidato, Experiencia, fields=('empresa', 'cargo',), extra=1, max_num=5)
+    ExperienciaFormset = inlineformset_factory(Candidato, Experiencia, fields=('empresa', 'cargo',), extra=1, max_num=3)
 
     if request.method == "POST":
         experiencias = ExperienciaFormset(request.POST, instance=candidato)
@@ -50,7 +47,7 @@ def editar_candidato(request):
         if experiencias.is_valid() and candidato.is_valid():
             candidato.save()
             experiencias.save()
-            return redirect('dashboard')
+            return redirect('editar_candidato')
 
     else:
         experiencias = ExperienciaFormset(instance=candidato)

@@ -1,7 +1,4 @@
-from django.contrib import admin
-from django.contrib.auth import views as auth_views
-
-from django.urls import path, include
+from django.urls import path
 from .views import dashboard, cadastrar_vaga, listar_vagas, deletar_vaga, alterar_vaga, aplicar_vaga, minhas_vagas, detalhes_vaga
 
 urlpatterns = [

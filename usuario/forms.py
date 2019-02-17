@@ -34,6 +34,3 @@ class ExperienciaForm(forms.ModelForm):
         fields = ['candidato', 'empresa', 'cargo', 'inicio', 'final', 'resumo']
 
 
-#ExperienciaFormSet = forms.inlineformset_factory(Candidato, Experiencia, form=ExperienciaForm, extra=1)
-
-

@@ -1,30 +1,25 @@
-import datetime
-
 import json
-from django.db import IntegrityError
-from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import VagaForm
 from .models import Vaga, Aplicacao, Candidato, Empresa
 from usuario.models import Experiencia
 from django.contrib import messages
 
-
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 
-def dashboard(request):
 
-    grupo_datas = Vaga.objects.annotate(month=TruncMonth('data')).values('month').annotate(total=Count('nome')).order_by('month')
-    grupo_candidatos = Aplicacao.objects.annotate(month=TruncMonth('data')).values('month').annotate(total=Count('candidato')).order_by('month')
+def dashboard(request):
+    grupo_datas = Vaga.objects.annotate(month=TruncMonth('data')).values('month').annotate(
+        total=Count('nome')).order_by('month')
+    grupo_candidatos = Aplicacao.objects.annotate(month=TruncMonth('data')).values('month').annotate(
+        total=Count('candidato')).order_by('month')
 
     datas_vagas = []
     total_vagas = []
 
-    datas_candidatos =[]
+    datas_candidatos = []
     total_candidatos = []
 
     for data in grupo_datas:
@@ -68,6 +63,7 @@ def cadastrar_vaga(request):
 @login_required()
 def listar_vagas(request):
     """
+    Listar todas as vagas cadastradas e disponíveis para visualização
     :param request:
     :return: request.Response
     """
@@ -77,13 +73,15 @@ def listar_vagas(request):
 
 @login_required
 def aplicar_vaga(request, id_vaga):
+
     """
-    :param request:
-    :param id_vaga
+    Registrar a candidatura do usuário à vaga
+    :param request: request
+    :param id_vaga: int
     :return: HttpResponse
     """
 
-    #verifica se já existe entre os elementos da vaga
+    # verifica se já existe entre os elementos da vaga
     vaga = get_object_or_404(Vaga, pk=id_vaga)
     result = vaga.aplicacoes.filter(candidato=request.user)
 
@@ -92,7 +90,7 @@ def aplicar_vaga(request, id_vaga):
         vaga.aplicacoes.create(candidato=candidato)
         messages.success(request, 'Boa sorte!')
     else:
-        messages.info(request, 'Você já está cadastrado')
+        messages.info(request, 'Você já está cadastrado!')
 
     return redirect('listar_vagas')
 
@@ -123,22 +121,37 @@ def minhas_vagas(request):
         return render(request, "minhas_vagas.html", {'vagas': vagas})
     else:
         vagas = Vaga.objects.filter(delete=False, aplicacoes__candidato=request.user).distinct()
-        return render(request, "minhas_vagas.html", {'vagas': vagas})
+        return render(request, "vagas_aplicadas.html", {'vagas': vagas})
 
 
 @login_required
 def detalhes_vaga(request, id_vaga):
-    # get vaga
+    faixa = ['Até 1.000', 'De 1.000 a 2.000', 'De 2.000 a 3.000', 'Acima de 3.000']
+    escolaridade = ['Ensino Fundamental', 'Ensino Médio', 'Tecnólogo', 'Ensino Superior', 'Pós / MBA / Mestrado',
+                    'Doutorado']
+
+    # buscar a vaga
     vaga = Vaga.objects.get(id=id_vaga)
 
-    # get todas as aplicações da vaga
+    # buscar todas as aplicações da vaga
     aplicacoes_vaga = vaga.aplicacoes.all()
 
     detalhes = []
 
+    # buscar as experiências de cada candidato e calcular a pontuação
     for aplicacao in aplicacoes_vaga:
+        pontos = 0
+
+        if aplicacao.candidato.pretensao_salarial is not None and \
+                (faixa.index(aplicacao.candidato.pretensao_salarial) <= faixa.index(vaga.faixa_salarial)):
+            pontos += 1
+
+        if aplicacao.candidato.ultima_escolaridade is not None and \
+                (escolaridade.index(aplicacao.candidato.ultima_escolaridade) >= escolaridade.index(vaga.escolaridade)):
+            pontos += 1
+
         exp = Experiencia.objects.filter(candidato=aplicacao.candidato)
-        detalhes.append([aplicacao.candidato, exp])
+        detalhes.append([aplicacao.candidato, exp, pontos])
 
     contexto = {'detalhes': detalhes, 'vaga': vaga}
     print(contexto)

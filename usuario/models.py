@@ -44,6 +44,7 @@ class Candidato(User):
     )
 
     pretensao_salarial = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,)
+
     ultima_escolaridade = models.CharField(
         max_length=50,
         choices=ESCOLARIDADE,

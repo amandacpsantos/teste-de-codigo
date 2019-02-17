@@ -2,10 +2,6 @@
 
 {% block content %}
 {% load static %}
-
-    <br>
-    <br>
-
     <div class="panel-default">
 
         <!-- /.panel-heading -->
@@ -27,7 +23,6 @@
                         <th>Ver</th>
                     </tr>
                     </thead>
-
 
 
                     <tbody id="lista_vaga">
@@ -75,15 +70,10 @@
                                       </a>
                                   {% endif %}
 
-
                               </div>
-
                             </div>
                           </div>
-
                         </div>
-
-
 
                         <script>
                             var a = "{{ vaga.id }}"
@@ -93,10 +83,6 @@
                                 });
                             });
                         </script>
-
-
-
-
                     </tr>
 
                     {% endfor %}

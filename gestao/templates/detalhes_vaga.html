@@ -21,10 +21,13 @@
 {% for candidato in detalhes %}
 <div class="card shadow mb-4">
 
+    <!-- Cabeçalho -->
     <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
         <h6 class="m-0 font-weight-bold text-primary">Candidato #{{ forloop.counter }} | {{candidato.0.candidato.first_name}}</h6>
+        <span class="badge badge-pill badge-primary">{{candidato.2}} Pontos</span>
     </a>
-    <!-- Card Content - Collapse -->
+
+    <!-- Dados pessoais -->
     <div class="collapse" id="collapseCardExample" style="">
         <div class="card-body">
             <strong>Informações Gerais</strong> <br><hr>
@@ -32,6 +35,8 @@
             Pretensão Salarial: {{candidato.0.candidato.pretensao_salarial | default_if_none:"--"}}<br>
             Escolaridade: {{candidato.0.candidato.ultima_escolaridade | default_if_none:"--"}} <br>
 
+
+            <!-- Dados profissionais -->
             {% for exp in candidato.1 %}
             <br>
             <strong>{{ forloop.counter }}# Experiência</strong><br>
