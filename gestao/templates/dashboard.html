@@ -18,7 +18,7 @@
                     data: {
                         labels: JSON.parse('{{ datas_vagas|safe }}'),
                         datasets: [{
-                            label: 'Vagas',
+                            label: 'Vagas x Mês',
                             data: JSON.parse('{{ total_vagas|safe }}'),
                             backgroundColor: [
                                 'rgba(255, 99, 132, 0.2)',
@@ -63,7 +63,7 @@
                     data: {
                         labels: JSON.parse('{{ datas_candidatos|safe }}'),
                         datasets: [{
-                            label: 'Candidatos',
+                            label: 'Candidatos x Mês',
                             data: JSON.parse('{{ total_candidatos|safe }}'),
                             backgroundColor: [
                                  'rgba(255, 99, 132, 0.2)',

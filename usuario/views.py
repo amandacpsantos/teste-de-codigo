@@ -21,7 +21,7 @@ def registrar_candidato(request):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            messages.success()
+            messages.success(request, 'Registro realizado com sucesso!')
             return redirect('login')
 
     return render(request, 'register.html', {'form': form})
@@ -66,9 +66,11 @@ def editar_candidato(request):
             experiencias.save()
             messages.success(request, 'Alteração realizada com sucesso!')
             return redirect('editar_candidato')
+        else:
+            messages.info(request, 'Verifique seus dados!')
 
     else:
-        messages.info(request, 'Verifique seus dados!')
+
         experiencias = ExperienciaFormset(instance=candidato)
         candidato = CandidatoEditForm(instance=candidato)
 

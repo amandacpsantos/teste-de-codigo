@@ -42,9 +42,6 @@
             <strong>{{ forloop.counter }}# Experiência</strong><br>
             Empresa: {{exp.empresa | default_if_none:"--"}}<br>
             Cargo: {{exp.cargo | default_if_none:"--"}}<br>
-            Início: {{exp.inicio | default_if_none:"--"}}<br>
-            Saída: {{exp.final | default_if_none:"--"}}<br>
-            Resumo Profissional: {{exp.resumo | default_if_none:"--"}}<br>
 
             {% endfor %}
         </div>

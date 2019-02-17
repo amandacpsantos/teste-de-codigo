@@ -14,14 +14,18 @@ from django.db.models.functions import TruncMonth
 def dashboard(request):
     grupo_datas = Vaga.objects.annotate(month=TruncMonth('data')).values('month').annotate(
         total=Count('nome')).order_by('month')
-    grupo_candidatos = Aplicacao.objects.annotate(month=TruncMonth('data')).values('month').annotate(
-        total=Count('candidato')).order_by('month')
+
+    grupo_candidatos = Candidato.objects.annotate(month=TruncMonth('data')).values('month').annotate(
+        total=Count('email')).order_by('month')
 
     datas_vagas = []
     total_vagas = []
 
     datas_candidatos = []
     total_candidatos = []
+
+    print(total_candidatos)
+
 
     for data in grupo_datas:
         datas_vagas.append('{}/{}'.format(data['month'].month, data['month'].year))

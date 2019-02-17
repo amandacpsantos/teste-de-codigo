@@ -1,3 +1,4 @@
+from django.contrib.auth import password_validation
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -6,7 +7,6 @@ class User(AbstractUser):
     categoria = models.PositiveIntegerField(default=0)
     username = models.CharField(max_length=10, unique=False, blank=True, null=True)
     email = models.EmailField(max_length=254, unique=True)
-    is_superuser = models.BooleanField(default=True, )
     is_staff = models.BooleanField(default=True, )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['EMAIL_FIELD']
@@ -53,6 +53,9 @@ class Candidato(User):
         blank=True,
     )
 
+    data = models.DateField(auto_now_add=True, null=True)
+
+
     class Meta:
         verbose_name = 'Candidato'
         verbose_name_plural = 'Candidatos'
@@ -65,3 +68,4 @@ class Experiencia(models.Model):
     inicio = models.DateField(null=True, blank=True, verbose_name='início')
     final = models.DateField(null=True, blank=True, verbose_name='final')
     resumo = models.TextField(max_length=500, blank=True, null=True)
+
