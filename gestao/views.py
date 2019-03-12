@@ -168,7 +168,8 @@ def detalhes_vaga(request, id_vaga):
             pontos += 1
 
         if vaga.faixa_salarial in faixa:
-            if aplicacao.candidato.pretensao_salarial - faixa[vaga.faixa_salarial] <= 0:
+            if aplicacao.candidato.pretensao_salarial - faixa[vaga.faixa_salarial] <= 0 or \
+                    faixa[vaga.faixa_salarial] >= 3001:
                 pontos += 1
 
         exp = Experiencia.objects.filter(candidato=aplicacao.candidato)
